@@ -1,6 +1,12 @@
 import random
+import csv
 
 def sim_game(ht_ops, ht_era, vt_ops, vt_era): #ht is home team vt is visting team
+    #make the variable a float
+    ht_ops = float(ht_ops)
+    ht_era = float(ht_era)
+    vt_ops = float(vt_ops)
+    vt_era = float(vt_era)
     #.757 is league average OPS
     #4.49 is league average ERA
     ht_win = 50 
@@ -113,23 +119,68 @@ def sim_game(ht_ops, ht_era, vt_ops, vt_era): #ht is home team vt is visting tea
 
     v = random.randrange(0, 100)
     if ht_win <= v:
-        print('home team wins')
+        return('hometeam')
     else:
-        print('Visting team wins')
-   
+        return('Vistingteam')
 
-class Team: #team class each team will be one, 
-    def __init__(self, era, ops, wins, loses, league, division):
-        self.era = era
-        self.ops = ops
-        self.wins = wins
-        self.loses = loses
-        self.league = league
-        self.division = division
-
-    def record(self): #returns teams record
-        return(wins + " - " + loses)
+def get_stats(team):
+    with open('UsefulTeamStats.csv') as stats:
+        statscsv = csv.reader(stats)
+        for row in statscsv:
+            if row[0] == team:
+                teamstats = [row[0], row[1], row[2]]
+            else:
+                continue
+        return teamstats
     
 
+class Team: #team class will be home team and road team, 
+    def __init__(self, name, ops, era):
+        self.name = name
+        self.ops = ops
+        self.era = era
+
+def season():
+    with open('2020MLBschedule.csv') as schedule:
+        schedulecsv = csv.reader(schedule)
+        for row in schedulecsv: #each row is a day of games
+            for col in row: # each column is a game being played
+                x = col
+                if x == "": #have to add this because some days dont have the same number of games, those parts of the csv are empty and i dont want error
+                    break
+                game = x.split("@")
+                vt = game[0] #vt is the visting team
+                ht = game[1] #ht is home team
+
+                #now get teams stats
+                visitors = get_stats(vt)
+                hometeam = get_stats(ht)
+
+                #make team objects
+                visitingteam = Team(visitors[0], visitors[1], visitors[2])
+
+                home_team = Team(hometeam[0], hometeam[1], hometeam[2])
+
+
+                #simgame
+                z = sim_game(home_team.ops, home_team.era, visitingteam.ops, visitingteam.era)
+                if z == 'hometeam':
+                    print (home_team.name)
+                elif z == 'visitingteam':
+                    print (visitingteam.name)
+                else:
+                    print ('nobody won so something is wrong')
+
+
+
+#post season
+
+                
+
+    
+
+
+
+
 #testing
-sim_game(.700, 4.00, .800, 3.00)
+season()
