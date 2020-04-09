@@ -216,16 +216,16 @@ def sim_game(ht_ops, ht_era, vt_ops, vt_era): #ht is home team vt is visting tea
         ht_win = ht_win - 5
         vt_win = vt_win + 5
 
-    v = random.randrange(0, 100)
+    vn = random.randrange(0, 100)
     print('---------')
     print ('ht_win:')
     print (ht_win)
     print ('vt_win:')
     print (vt_win)
     print ('victory number:')
-    print (v)
+    print (vn)
 
-    if v <=  ht_win:
+    if vn <=  ht_win:
         return('ht')
     #elif ht_win < v:
         #return('vt')
@@ -279,7 +279,7 @@ def season():
                     add_win(home_team.name) #add win to winning team
                 elif z == 'vt':
                     print (visitingteam.name)
-                    add_win(home_team.name) #add win to winning team
+                    add_win(visitingteam.name) #add win to winning team
                 else:
                     print ('nobody won so something is wrong')
                 
